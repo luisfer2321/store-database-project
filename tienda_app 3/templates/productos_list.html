@@ -2,10 +2,13 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1>Productos</h1>
-    <a href="/productos/nuevo" class="btn btn-primary">+ Nuevo producto</a>
+    <div>
+        <a href="/productos/inactivos" class="btn btn-outline-secondary">Ver desactivados</a>
+        <a href="/productos/nuevo" class="btn btn-primary">+ Nuevo producto</a>
+    </div>
 </div>
 <table class="table table-striped bg-white">
-    <thead><tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>Proveedor</th><th>Precio</th><th>Talla</th><th>Color</th><th>Stock</th></tr></thead>
+    <thead><tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>Proveedor</th><th>Precio</th><th>Talla</th><th>Color</th><th>Stock</th><th></th></tr></thead>
     <tbody>
     {% for p in productos %}
         <tr>
@@ -17,6 +20,11 @@
             <td>{{ p.talla }}</td>
             <td>{{ p.color }}</td>
             <td>{{ p.stock_actual }}</td>
+            <td>
+                <form method="POST" action="/productos/desactivar/{{ p.id_producto }}" onsubmit="return confirm('¿Desactivar {{ p.nombre }}? Ya no aparecerá disponible para nuevas ventas, pero su historial se conserva.');">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Desactivar</button>
+                </form>
+            </td>
         </tr>
     {% endfor %}
     </tbody>
