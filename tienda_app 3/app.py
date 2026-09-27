@@ -33,11 +33,22 @@ def index():
 def clientes_list():
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM cliente ORDER BY id_cliente DESC")
+    cur.execute("SELECT * FROM cliente WHERE activo = true ORDER BY id_cliente DESC")
     clientes = cur.fetchall()
     cur.close()
     conn.close()
     return render_template("clientes_list.html", clientes=clientes)
+
+
+@app.route("/clientes/inactivos")
+def clientes_inactivos():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM cliente WHERE activo = false ORDER BY id_cliente DESC")
+    clientes = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("clientes_inactivos.html", clientes=clientes)
 
 
 @app.route("/clientes/nuevo", methods=["GET", "POST"])
@@ -54,6 +65,28 @@ def cliente_nuevo():
         conn.close()
         return redirect(url_for("clientes_list"))
     return render_template("cliente_form.html")
+
+
+@app.route("/clientes/desactivar/<int:id_cliente>", methods=["POST"])
+def cliente_desactivar(id_cliente):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("UPDATE cliente SET activo = false WHERE id_cliente = %s", (id_cliente,))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return redirect(url_for("clientes_list"))
+
+
+@app.route("/clientes/reactivar/<int:id_cliente>", methods=["POST"])
+def cliente_reactivar(id_cliente):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("UPDATE cliente SET activo = true WHERE id_cliente = %s", (id_cliente,))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return redirect(url_for("clientes_inactivos"))
 
 
 # ============== VENDEDORES ==============
@@ -139,12 +172,53 @@ def productos_list():
         FROM producto p
         JOIN categoria c ON p.id_categoria = c.id_categoria
         JOIN proveedor pr ON p.id_proveedor = pr.id_proveedor
+        WHERE p.activo = true
         ORDER BY p.id_producto DESC
     """)
     productos = cur.fetchall()
     cur.close()
     conn.close()
     return render_template("productos_list.html", productos=productos)
+
+
+@app.route("/productos/inactivos")
+def productos_inactivos():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT p.*, c.nombre AS categoria_nombre, pr.nombre_empresa AS proveedor_nombre
+        FROM producto p
+        JOIN categoria c ON p.id_categoria = c.id_categoria
+        JOIN proveedor pr ON p.id_proveedor = pr.id_proveedor
+        WHERE p.activo = false
+        ORDER BY p.id_producto DESC
+    """)
+    productos = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("productos_inactivos.html", productos=productos)
+
+
+@app.route("/productos/desactivar/<int:id_producto>", methods=["POST"])
+def producto_desactivar(id_producto):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("UPDATE producto SET activo = false WHERE id_producto = %s", (id_producto,))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return redirect(url_for("productos_list"))
+
+
+@app.route("/productos/reactivar/<int:id_producto>", methods=["POST"])
+def producto_reactivar(id_producto):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("UPDATE producto SET activo = true WHERE id_producto = %s", (id_producto,))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return redirect(url_for("productos_inactivos"))
 
 
 @app.route("/productos/nuevo", methods=["GET", "POST"])
@@ -249,7 +323,7 @@ def venta_nueva():
     clientes = cur.fetchall()
     cur.execute("SELECT * FROM vendedor ORDER BY nombre")
     vendedores = cur.fetchall()
-    cur.execute("SELECT * FROM producto ORDER BY nombre")
+    cur.execute("SELECT * FROM producto WHERE activo = true ORDER BY nombre")
     productos = cur.fetchall()
     cur.close()
     conn.close()
