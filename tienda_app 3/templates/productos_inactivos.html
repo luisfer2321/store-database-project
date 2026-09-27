@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Productos desactivados</h1>
+    <a href="/productos" class="btn btn-outline-secondary">Volver a productos activos</a>
+</div>
+<table class="table table-striped bg-white">
+    <thead><tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>Proveedor</th><th>Precio</th><th></th></tr></thead>
+    <tbody>
+    {% for p in productos %}
+        <tr>
+            <td>{{ p.id_producto }}</td>
+            <td>{{ p.nombre }}</td>
+            <td>{{ p.categoria_nombre }}</td>
+            <td>{{ p.proveedor_nombre }}</td>
+            <td>{{ p.precio_unitario }}</td>
+            <td>
+                <form method="POST" action="/productos/reactivar/{{ p.id_producto }}">
+                    <button type="submit" class="btn btn-sm btn-success">Reactivar</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
