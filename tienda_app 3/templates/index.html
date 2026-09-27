@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-4">Panel de la tienda</h1>
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Clientes</h5>
+            <a href="/clientes" class="btn btn-outline-primary btn-sm">Ver lista</a>
+            <a href="/clientes/nuevo" class="btn btn-primary btn-sm">Agregar</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Vendedores</h5>
+            <a href="/vendedores" class="btn btn-outline-primary btn-sm">Ver lista</a>
+            <a href="/vendedores/nuevo" class="btn btn-primary btn-sm">Agregar</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Proveedores</h5>
+            <a href="/proveedores" class="btn btn-outline-primary btn-sm">Ver lista</a>
+            <a href="/proveedores/nuevo" class="btn btn-primary btn-sm">Agregar</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Productos</h5>
+            <a href="/productos" class="btn btn-outline-primary btn-sm">Ver lista</a>
+            <a href="/productos/nuevo" class="btn btn-primary btn-sm">Agregar</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5>Ventas</h5>
+            <a href="/ventas" class="btn btn-outline-primary btn-sm">Ver lista</a>
+            <a href="/ventas/nueva" class="btn btn-success btn-sm">Registrar venta</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

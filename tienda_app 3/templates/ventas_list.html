@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Ventas</h1>
+    <a href="/ventas/nueva" class="btn btn-success">+ Registrar venta</a>
+</div>
+<table class="table table-striped bg-white">
+    <thead><tr><th>ID</th><th>Cliente</th><th>Vendedor</th><th>Fecha</th><th>Total</th><th>Estado</th><th></th></tr></thead>
+    <tbody>
+    {% for v in ventas %}
+        <tr>
+            <td>{{ v.id_venta }}</td>
+            <td>{{ v.cliente_nombre }} {{ v.cliente_apellido }}</td>
+            <td>{{ v.vendedor_nombre }}</td>
+            <td>{{ v.fecha_venta }}</td>
+            <td>${{ v.total_venta }}</td>
+            <td>{{ v.estado }}</td>
+            <td><a href="/ventas/{{ v.id_venta }}" class="btn btn-sm btn-outline-secondary">Ver detalle</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

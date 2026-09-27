@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Registrar venta</h1>
+<form method="POST" class="bg-white p-4 rounded">
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label class="form-label">Cliente</label>
+            <select name="id_cliente" class="form-select" required>
+                {% for c in clientes %}
+                    <option value="{{ c.id_cliente }}">{{ c.nombre }} {{ c.apellido }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Vendedor</label>
+            <select name="id_vendedor" class="form-select" required>
+                {% for v in vendedores %}
+                    <option value="{{ v.id_vendedor }}">{{ v.nombre }} {{ v.apellido }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Método de pago</label>
+            <select name="metodo_pago" class="form-select" required>
+                <option value="efectivo">Efectivo</option>
+                <option value="tarjeta">Tarjeta</option>
+                <option value="transferencia">Transferencia</option>
+            </select>
+        </div>
+    </div>
+
+    <h5>Productos</h5>
+    <div id="filas-productos">
+        <div class="row mb-2 fila-producto">
+            <div class="col-md-6">
+                <select name="producto_id[]" class="form-select">
+                    <option value="">-- Selecciona --</option>
+                    {% for p in productos %}
+                        <option value="{{ p.id_producto }}">{{ p.nombre }} (${{ p.precio_unitario }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="number" name="cantidad[]" class="form-control" placeholder="Cantidad" min="1">
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-sm btn-outline-secondary mb-3" onclick="agregarFila()">+ Agregar producto</button>
+    <br>
+    <button class="btn btn-success">Guardar venta</button>
+</form>
+
+<script>
+function agregarFila() {
+    const contenedor = document.getElementById("filas-productos");
+    const nuevaFila = contenedor.children[0].cloneNode(true);
+    nuevaFila.querySelectorAll("select, input").forEach(el => el.value = "");
+    contenedor.appendChild(nuevaFila);
+}
+</script>
+{% endblock %}

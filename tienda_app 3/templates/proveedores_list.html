@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Proveedores</h1>
+    <a href="/proveedores/nuevo" class="btn btn-primary">+ Nuevo proveedor</a>
+</div>
+<table class="table table-striped bg-white">
+    <thead><tr><th>ID</th><th>Empresa</th><th>Contacto</th><th>Número</th></tr></thead>
+    <tbody>
+    {% for p in proveedores %}
+        <tr>
+            <td>{{ p.id_proveedor }}</td>
+            <td>{{ p.nombre_empresa }}</td>
+            <td>{{ p.contacto_nombre }}</td>
+            <td>{{ p.numero }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
