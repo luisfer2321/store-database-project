@@ -13,9 +13,14 @@
             <td>{{ v.cliente_nombre }} {{ v.cliente_apellido }}</td>
             <td>{{ v.vendedor_nombre }}</td>
             <td>{{ v.fecha_venta }}</td>
-            <td>${{ v.total_venta }}</td>
+            <td>C$ {{ v.total_venta }}</td>
             <td>{{ v.estado }}</td>
-            <td><a href="/ventas/{{ v.id_venta }}" class="btn btn-sm btn-outline-secondary">Ver detalle</a></td>
+            <td>
+                <a href="/ventas/{{ v.id_venta }}" class="btn btn-sm btn-outline-secondary">Ver detalle</a>
+                <form method="POST" action="/ventas/eliminar/{{ v.id_venta }}" class="d-inline" onsubmit="return confirm('¿Eliminar esta venta? El stock de los productos se restaurará automáticamente. Esta acción no se puede deshacer.');">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                </form>
+            </td>
         </tr>
     {% endfor %}
     </tbody>
