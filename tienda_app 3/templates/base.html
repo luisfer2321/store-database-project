@@ -21,5 +21,19 @@
     <div class="container">
         {% block content %}{% endblock %}
     </div>
+
+    <script>
+        // Evita que un formulario se envíe dos veces por doble clic
+        document.querySelectorAll("form").forEach(function (form) {
+            form.addEventListener("submit", function (e) {
+                if (e.defaultPrevented) return; // el usuario canceló un confirm(), no deshabilitar
+                const boton = form.querySelector("button[type=submit]");
+                if (boton) {
+                    boton.disabled = true;
+                    boton.innerText = "Guardando...";
+                }
+            });
+        });
+    </script>
 </body>
 </html>
