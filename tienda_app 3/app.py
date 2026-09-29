@@ -1,3 +1,4 @@
+
 import os
 from flask import Flask, request, render_template, redirect, url_for
 import psycopg2
@@ -328,6 +329,35 @@ def venta_nueva():
     cur.close()
     conn.close()
     return render_template("venta_form.html", clientes=clientes, vendedores=vendedores, productos=productos)
+
+
+@app.route("/ventas/eliminar/<int:id_venta>", methods=["POST"])
+def venta_eliminar(id_venta):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # Restaurar el stock de cada producto de esta venta antes de borrarla
+    cur.execute("SELECT id_producto, cantidad FROM detalle_venta WHERE id_venta = %s", (id_venta,))
+    items = cur.fetchall()
+    for item in items:
+        cur.execute(
+            "UPDATE producto SET stock_actual = stock_actual + %s WHERE id_producto = %s",
+            (item["cantidad"], item["id_producto"])
+        )
+        cur.execute("SELECT stock_actual FROM producto WHERE id_producto = %s", (item["id_producto"],))
+        nuevo_stock = cur.fetchone()["stock_actual"]
+        cur.execute(
+            """INSERT INTO inventario_movimientos (id_producto, tipo_movimiento, motivo, cantidad, id_referencia, stock_resultante)
+               VALUES (%s, 'ENTRADA', 'venta anulada', %s, %s, %s)""",
+            (item["id_producto"], item["cantidad"], id_venta, nuevo_stock)
+        )
+
+    # Al borrar la venta, sus detalle_venta se borran solos (ON DELETE CASCADE)
+    cur.execute("DELETE FROM venta WHERE id_venta = %s", (id_venta,))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return redirect(url_for("ventas_list"))
 
 
 if __name__ == "__main__":
