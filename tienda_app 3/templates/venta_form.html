@@ -36,7 +36,7 @@
                 <select name="producto_id[]" class="form-select">
                     <option value="">-- Selecciona --</option>
                     {% for p in productos %}
-                        <option value="{{ p.id_producto }}">{{ p.nombre }} (${{ p.precio_unitario }})</option>
+                        <option value="{{ p.id_producto }}">{{ p.nombre }} (C$ {{ p.precio_unitario }})</option>
                     {% endfor %}
                 </select>
             </div>
